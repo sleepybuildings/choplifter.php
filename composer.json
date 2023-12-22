@@ -1,0 +1,17 @@
+{
+    "name": "sleepybuildings/choplifter",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Sleepybuildings\\Choplifter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Thomas Smit"
+        }
+    ],
+    "require": {
+        "symfony/console": "^7.0"
+    }
+}
