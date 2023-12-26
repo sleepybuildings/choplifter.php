@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sleepybuildings\Choplifter;
 
 use Monolog\Logger;
-use Sleepybuildings\Choplifter\Entities\Helicopter;
+use Sleepybuildings\Choplifter\Entities\Chopper\Helicopter;
 use Sleepybuildings\Choplifter\Entities\World\Ground;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -4,43 +4,53 @@ declare(strict_types=1);
 
 namespace Sleepybuildings\Choplifter\Entities\World;
 
-use Sleepybuildings\Choplifter\Entity;
+use Override;
+use Sleepybuildings\Choplifter\Entities\Entity;
+use Sleepybuildings\Choplifter\Entities\PhysicalEntity;
 use Sleepybuildings\Choplifter\GameState;
+use Sleepybuildings\Choplifter\Utilities\Rect;
 
-class Ground implements Entity
+class Ground extends PhysicalEntity
 {
+
 	public const string Name = 'ground';
 
 	private ?string $ground = null;
 
-	public readonly int $height;
-
 
 	public function __construct()
 	{
-		$this->height = 5;
 	}
 
 
-	#[\Override] public function update(GameState $state): void
+	#[Override] public function update(GameState $state): void
 	{
 		if($this->ground === null)
 			$this->ground = str_repeat('-', $state->screen->width);
 
+		if($this->hitbox === null)
+		{
+			$this->hitbox = new Rect(
+				x: 0,
+				y: $state->screen->height - 5,
+				width: $state->screen->width,
+				height: $state->screen->height,
+			);
+		}
+
 		// Draw the ground
 
-		$yPos = $state->screen->height - $this->height;
-		$state->screen->write(0, $yPos, $this->ground);
+		$state->screen->write(0, $this->hitbox->y, $this->ground);
 	}
 
 
-	#[\Override] public function killed(): bool
+	#[Override] public function killed(): bool
 	{
 		return false;
 	}
 
 
-	#[\Override] public function name(): ?string
+	#[Override] public function name(): ?string
 	{
 		return self::Name;
 	}

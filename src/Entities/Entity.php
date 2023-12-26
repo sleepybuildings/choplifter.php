@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sleepybuildings\Choplifter;
+namespace Sleepybuildings\Choplifter\Entities;
+
+use Sleepybuildings\Choplifter\GameState;
 
 interface Entity
 {
