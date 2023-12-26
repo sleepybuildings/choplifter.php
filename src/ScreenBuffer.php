@@ -40,8 +40,12 @@ class ScreenBuffer
 		{
 			if($xPos >= $this->width)
 			{
-				$y++;
-				$xPos = 0;
+				// Don't overflow
+				continue;
+
+				// New line?
+				//$y++;
+				//$xPos = 0;
 			}
 
 			if($y > $this->height)

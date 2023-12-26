@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sleepybuildings\Choplifter;
 
+use Monolog\Logger;
 use Sleepybuildings\Choplifter\Entities\Helicopter;
 use Sleepybuildings\Choplifter\Entities\World\Ground;
 use Symfony\Component\Console\Cursor;
@@ -25,7 +26,8 @@ class Game
 
 
 	public function __construct(
-		private readonly OutputInterface $output
+		private readonly OutputInterface $output,
+		private readonly Logger $logger,
 	)
 	{
 		$this->cursor = new Cursor($this->output);
@@ -41,14 +43,8 @@ class Game
 		$this->setUpWorld();
 
 		$previousTime = microtime(as_float: true);
-
 		while($this->inGame)
 		{
-			var_dump(ord(fread(STDIN, 1)));
-			echo PHP_EOL;
-			continue;
-
-
 			$currentTime = microtime(as_float: true);
 			$delta = $currentTime - $previousTime;
 			$previousTime = $currentTime;
@@ -80,7 +76,8 @@ class Game
 			keyPressed: $this->key,
 			delta: $delta,
 			screen: $this->screen,
-			entities: $this->worldEntities
+			entities: $this->worldEntities,
+			logger: $this->logger
 		);
 
 		foreach($this->worldEntities->entities() as $entity)
@@ -94,11 +91,19 @@ class Game
 
 	private function processInput(): void
 	{
-		$this->key = Key::tryFrom($this->readKey()) ?? Key::None;
-print_r($this->key);
+		$rawKey = $this->readKey();
+
+		if(!empty($rawKey))
+			$this->logger->info('Key pressed', ['raw' => $rawKey]);
+
+		$this->key = Key::tryFrom($rawKey) ?? Key::None;
+
+		if($this->key !== Key::None)
+			$this->logger->info('Key pressed', ['key' => $this->key]);
+
 		switch($this->key)
 		{
-			case Key::Escape: // ESC
+			case Key::C:
 				$this->inGame = false;
 				echo "DONEEEEEE";
 				break;
@@ -106,9 +111,9 @@ print_r($this->key);
 	}
 
 
-	private function readKey(): int
+	private function readKey(): string
 	{
-		return ord(fread(STDIN, 1));
+		return fread(STDIN, 1);
 	}
 
 
@@ -124,7 +129,8 @@ print_r($this->key);
 		$this->cursor->hide();
 		$this->cursor->clearScreen();
 
-		system("stty -icanon"); // Disabled enter on fread
+		system("stty cbreak -echo"); // Disabled enter on fread
+		//system("stty -icanon"); // Disabled enter on fread
 		stream_set_blocking(STDIN, false);
 	}
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sleepybuildings\Choplifter;
 
+use Monolog\Logger;
+
 class GameState
 {
 
@@ -13,6 +15,7 @@ class GameState
 		public readonly float $delta,
 		public readonly ScreenBuffer $screen,
 		public readonly WorldEntities $entities,
+		public readonly Logger $logger,
 	)
 	{
 	}

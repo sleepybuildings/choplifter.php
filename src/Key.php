@@ -4,21 +4,36 @@ declare(strict_types=1);
 
 namespace Sleepybuildings\Choplifter;
 
-enum Key: int
+enum Key: string
 {
-	case None = 0;
-	case Escape = 27;
+	// https://www.gnu.org/software/screen/manual/html_node/Input-Translation.html
+	case None = '';
 
-	case Left = 37;
-	case Up = 38;
-	case Right = 39;
-	case Down = 40;
+	// Broken
+	case Left = "\033[D";
+	case Up = "\033[A";
+	case Right = "\033[C";
+	case Down = "\033[B";
 
-	case W = 87;
-	case S = 83;
-	case A = 65;
-	case D = 68;
+	case W = 'w';
+	case S = 's';
+	case A = 'a';
+	case D = 'd';
+	case C = 'c';
 
+//	case Escape = "\033";
+
+
+	public function isLeft(): bool
+	{
+		return $this === self::Left || $this === self::A;
+	}
+
+
+	public function isRight(): bool
+	{
+		return $this === self::Right || $this === self::D;
+	}
 
 	public function isUp(): bool
 	{
